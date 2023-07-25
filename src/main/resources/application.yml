@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:mysql:///exam
+    username: root
+    password: 198361
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis-plus:
+  type-aliases-package: com.example.exam.entity
