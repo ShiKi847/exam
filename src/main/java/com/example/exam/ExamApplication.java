@@ -51,12 +51,22 @@ public class ExamApplication {
         factoryBean.setSecurityManager(securityManager);
         Map<String,String> map=new LinkedHashMap<>();
         //路由器的过滤法则,anon放行 authc认证
+        //动态资源放行
         map.put("/","anon");
         map.put("/index","anon");
         map.put("/login","anon");
         map.put("/register","anon");
+        //静态资源放行
+        map.put("/css/*","anon");
+        map.put("/fonts/*","anon");
+        map.put("/img/*","anon");
+        map.put("/js/*","anon");
+        map.put("/favicon.ico","anon");
+
         map.put("/logo.png","anon");
+        //退出
         map.put("/logout","logout");
+        //认证
         map.put("/**","authc");
         factoryBean.setFilterChainDefinitionMap(map);
         factoryBean.setLoginUrl("/login");
