@@ -18,7 +18,7 @@ public class UserController {
         Subject subject = SecurityUtils.getSubject();
         try {
             subject.login(new UsernamePasswordToken(usrAccount,usrPassword));
-            return "redirct:/index";
+            return "redirect:/index";
         } catch (AuthenticationException e) {
             model.addAttribute("tip","账号或密码错误");
             return "login";
