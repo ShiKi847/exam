@@ -1,5 +1,6 @@
 package com.example.exam.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.Date;
 @Data
 @TableName("t_user") // 表名是谁
 public class User {
-    @TableId("usr_id") // 支持主键查询
+    @TableId(value = "usr_id",type = IdType.AUTO) // 支持主键查询
     private Integer usrId;
     private String usrName;
     private String usrAccount;
