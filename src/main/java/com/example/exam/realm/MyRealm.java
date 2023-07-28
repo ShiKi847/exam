@@ -36,6 +36,13 @@ public class MyRealm extends AuthorizingRealm {
     //授权
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        return null;
+        //从会话中拿到用户信息
+        User user  = (User) principalCollection.getPrimaryPrincipal();
+        //构造一个简单授权信息对象
+        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+        //将user里面存储好的角色存入
+        authorizationInfo.addRole(user.getUsrRole());
+        //返回
+        return authorizationInfo;
     }
 }

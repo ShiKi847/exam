@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>考试信息管理系统</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+        <!--  抬头拦  -->
+        <div th:replace="common::#header"></div>
+        <!--  导航栏  -->
+        <div th:replace="common::#nav"></div>
+        <!--  登录表单 -->
+        <article class="container">
+            管理试卷
+        </article>
+        <!--  版权栏      -->
+        <div th:replace="common::#footer"></div>
+
+        <script th:src="@{/js/jquery-3.3.1.js}"></script>
+        <script th:src="@{/js/bootstrap.js}"></script>
+        <script>
+        function check(){
+            var usrAccount = $('#usrAccount').val()
+            var usrPassword = $('#usrPassword').val()
+            if(!/^\w{2,16}$/.test(usrAccount)){
+                $('#tip').text("账号格式不对")
+                return false
+            }
+            if(!/^\w{2,16}$/.test(usrPassword)){
+                $('#tip').text("密码格式不对")
+                return false
+            }
+
+            return true;
+        }
+    </script>
+</body>
+</html>

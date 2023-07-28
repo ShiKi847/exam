@@ -1,4 +1,4 @@
-package com.example.exam.realm.impl;
+package com.example.exam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.exam.dao.UserMapper;
