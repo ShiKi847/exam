@@ -18,7 +18,13 @@
                     <a th:href="@{/register}">注册</a>
                 </shiro:notAuthenticated>
                 <shiro:authenticated>
-                    欢迎 <strong><shiro:principal property="usrName"/></strong> 访问 <br>
+                    欢迎
+                    <strong>
+                        <shiro:principal property="usrName"/>
+                    </strong>
+                    <span shiro:hasRole="ADMIN">老师</span>
+                    <span shiro:hasRole="USER">学生</span>
+                    访问 <br>
                     <a th:href="@{/logout}">退出</a>
                 </shiro:authenticated>
             </div>
