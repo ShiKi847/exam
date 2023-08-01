@@ -51,7 +51,9 @@ public class PaperController {
     @ResponseBody
     public boolean upload(MultipartFile file, @Value("${file.upload}") String path) throws IOException {
         if(file.isEmpty()) {return false;}
-        file.transferTo(new File(path,file.getOriginalFilename()));
+        String filename = file.getOriginalFilename();
+        boolean flag =paperService.savePaperContent(file);
+        if(flag) {file.transferTo(new File(path,filename));}
         return true;
     }
 }
