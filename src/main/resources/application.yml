@@ -13,3 +13,6 @@ logging:
     org.springframework.jdbc: trace
 file:
   upload: D:\up
+server:
+  servlet:
+    context-path: /exam

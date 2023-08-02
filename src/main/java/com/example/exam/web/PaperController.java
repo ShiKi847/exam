@@ -49,11 +49,10 @@ public class PaperController {
     //上传文件
     @PostMapping("/upload")
     @ResponseBody
-    public boolean upload(MultipartFile file, @Value("${file.upload}") String path) throws IOException {
+    public boolean upload(MultipartFile file, Integer paId,@Value("${file.upload}") String path) throws IOException {
         if(file.isEmpty()) {return false;}
-        String filename = file.getOriginalFilename();
-        boolean flag =paperService.savePaperContent(file);
-        if(flag) {file.transferTo(new File(path,filename));}
-        return true;
+        boolean flag =paperService.savePaperContent(file,paId);
+        if(flag) {file.transferTo(new File(path,file.getOriginalFilename()));}
+        return flag;
     }
 }

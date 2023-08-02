@@ -17,5 +17,5 @@ public interface PaperService {
     List<Paper> queryPaperList();
 
     //保存题库内容
-    boolean savePaperContent(MultipartFile file) throws IOException;
+    boolean savePaperContent(MultipartFile file ,Integer paId) throws IOException;
 }

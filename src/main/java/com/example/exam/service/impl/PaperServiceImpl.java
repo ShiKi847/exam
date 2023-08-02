@@ -1,6 +1,7 @@
 package com.example.exam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.exam.dao.PaperMapper;
 import com.example.exam.dao.SingleMapper;
 import com.example.exam.dao.YesNoMapper;
@@ -58,7 +59,22 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
-    public boolean savePaperContent(MultipartFile file) throws IOException {
+    public boolean savePaperContent(MultipartFile file ,Integer paId) throws IOException {
+        //删除旧的题目内容
+        UpdateWrapper<Single> uwSingle = new UpdateWrapper<>();
+        uwSingle.eq("sin_pa_id",paId);
+        singleMapper.delete(uwSingle);
+        UpdateWrapper<Yesno> uwYesno = new UpdateWrapper<>();
+        uwYesno.eq("yn_pa_id",paId);
+        yesNoMapper.delete(uwYesno);
+
+        //修改试卷的状态
+        Paper paper = new Paper();
+        paper.setPaId(paId);
+        paper.setPaStatus(true);
+        paper.setPaUpdatedate(new Date());
+        paperMapper.updateById(paper);
+
         Workbook workbook = null;
         if(file.getOriginalFilename().endsWith(".xls")){
             workbook = new HSSFWorkbook(file.getInputStream());
@@ -82,18 +98,18 @@ public class PaperServiceImpl implements PaperService {
                Character sinStandard = row.getCell(7).toString().charAt(0);
                Integer sinPower =(int)Double.parseDouble(row.getCell(8).toString());
                singleMapper.insert(new Single(UUID.randomUUID().toString().replace("-","")
-                       ,sinPos,sinCaption,sinA,sinB,sinC,sinD,sinStandard,sinPower,1,new Date(),null));
+                       ,sinPos,sinCaption,sinA,sinB,sinC,sinD,sinStandard,sinPower,paId,new Date(),null));
            }else if("判断".equals(type)){
                 Integer ynPos =(int)Double.parseDouble(row.getCell(1).toString());
                 String ynCaption = row.getCell(2).toString();
                 Character ynStandard = row.getCell(7).toString().charAt(0);
                 Integer ynPower =(int)Double.parseDouble(row.getCell(8).toString());
                 yesNoMapper.insert(new Yesno(UUID.randomUUID().toString().replace("-","")
-                       ,ynPos,ynCaption,ynStandard,ynPower,1,new Date(),null));
+                       ,ynPos,ynCaption,ynStandard,ynPower,paId,new Date(),null));
            }
             //换行
             System.out.println();
         }
-        return false;
+        return true;
     }
 }
