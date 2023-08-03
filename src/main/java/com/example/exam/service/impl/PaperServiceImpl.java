@@ -9,9 +9,9 @@ import com.example.exam.entity.Paper;
 import com.example.exam.entity.Single;
 import com.example.exam.entity.User;
 import com.example.exam.entity.Yesno;
+import com.example.exam.pojo.JsonResult;
 import com.example.exam.service.PaperService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -111,5 +112,37 @@ public class PaperServiceImpl implements PaperService {
             System.out.println();
         }
         return true;
+    }
+
+    @Override
+    public JsonResult<Paper> queryPaper(Integer paId, String paPassword) {
+        Paper paper = paperMapper.selectById(paId);
+        if(paper==null){
+            return new JsonResult<>(404,"试卷ID不存在");
+        }
+        if (!paPassword.equals(paper.getPaPassword())){
+            return  new JsonResult<>(500,"试卷密码错误");
+        }
+        return new JsonResult<>(200,"OK",paper);
+    }
+
+    @Override
+    public JsonResult<Serializable> queryQuestion(Integer paId, Integer pos) {
+        //先查单选题,如果有就返回,没有就查判断题
+        QueryWrapper<Single> qwSingle = new QueryWrapper<>();
+        qwSingle.eq("sin_pa_id",paId);
+        qwSingle.eq("sin_pos",pos);
+        Single single = singleMapper.selectOne(qwSingle);
+        if(single != null){
+            return new JsonResult<>(200,"OK",single);
+        }
+        QueryWrapper<Yesno> qwYesno = new QueryWrapper<>();
+        qwYesno.eq("yn_pa_id",paId);
+        qwYesno.eq("yn_pos",pos);
+        Yesno yesno = yesNoMapper.selectOne(qwYesno);
+        if(yesno != null){
+            return new JsonResult<>(200,"OK",yesno);
+        }
+        return new JsonResult<>(404,"not found");
     }
 }

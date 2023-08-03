@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 @TableName("t_single") // 表名是谁
-public class Single {
+public class Single implements Serializable {
     @TableId(value="sin_id") // 支持主键查询
     private String sinId; // ID
     private Integer sinPos; // 序号

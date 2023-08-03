@@ -1,6 +1,7 @@
 package com.example.exam.web;
 
 import com.example.exam.entity.Paper;
+import com.example.exam.pojo.JsonResult;
 import com.example.exam.service.PaperService;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -55,4 +57,27 @@ public class PaperController {
         if(flag) {file.transferTo(new File(path,file.getOriginalFilename()));}
         return flag;
     }
+
+    //在线老师
+    @GetMapping("/onlineTest")
+    @RequiresRoles("USER")
+    public String onlineTest(){
+        return "onlineTest";
+    }
+
+    //在线老师
+    @PostMapping("/onlineTest")
+    @RequiresRoles("USER")
+    @ResponseBody
+    public JsonResult<Paper> onlineTest(Integer paId, String paPassword){
+        return paperService.queryPaper(paId,paPassword);
+    }
+
+    @PostMapping("/question")
+    @RequiresRoles("USER")
+    @ResponseBody
+    public JsonResult<Serializable> question(Integer paId, Integer pos){
+        return paperService.queryQuestion(paId,pos);
+    }
+
 }

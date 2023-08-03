@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 @TableName("t_yesno") // 表名是谁
-public class Yesno {
+public class Yesno implements Serializable {
     @TableId(value="yn_id") // 支持主键查询
     private String ynId; // ID
     private Integer ynPos; // 序号

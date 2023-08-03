@@ -1,10 +1,12 @@
 package com.example.exam.service;
 
 import com.example.exam.entity.Paper;
+import com.example.exam.pojo.JsonResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -18,4 +20,8 @@ public interface PaperService {
 
     //保存题库内容
     boolean savePaperContent(MultipartFile file ,Integer paId) throws IOException;
+
+    JsonResult<Paper> queryPaper(Integer paId, String paPassword);
+
+    JsonResult<Serializable> queryQuestion(Integer paId, Integer pos);
 }

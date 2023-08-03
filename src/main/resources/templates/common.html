@@ -56,6 +56,16 @@
                         </li>
                     </shiro:authenticated>
                 </ul>
+                <ul class="nav navbar-nav" shiro:hasRole="USER">
+                    <shiro:authenticated>
+                        <li th:class=" ${#httpServletRequest.requestURI.endsWith('/addPaper')} ? 'active' : '' ">
+                            <a th:href="@{/onlineTest}">在线考场</a>
+                        </li>
+                        <li th:class=" ${#httpServletRequest.requestURI.endsWith('/managerPaper')} ? 'active' : '' ">
+                            <a th:href="@{/myScore}">我的成绩</a>
+                        </li>
+                    </shiro:authenticated>
+                </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
