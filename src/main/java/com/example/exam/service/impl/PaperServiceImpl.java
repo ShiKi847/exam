@@ -2,13 +2,11 @@ package com.example.exam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.example.exam.dao.AnswerMapper;
 import com.example.exam.dao.PaperMapper;
 import com.example.exam.dao.SingleMapper;
 import com.example.exam.dao.YesNoMapper;
-import com.example.exam.entity.Paper;
-import com.example.exam.entity.Single;
-import com.example.exam.entity.User;
-import com.example.exam.entity.Yesno;
+import com.example.exam.entity.*;
 import com.example.exam.pojo.JsonResult;
 import com.example.exam.service.PaperService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -39,6 +37,9 @@ public class PaperServiceImpl implements PaperService {
 
     @Autowired
     private YesNoMapper yesNoMapper;
+
+    @Autowired
+    private AnswerMapper answerMapper;
     @Override
     public boolean addPaper(Paper paper) {
         //获取当前用户
@@ -128,12 +129,21 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     public JsonResult<Serializable> queryQuestion(Integer paId, Integer pos) {
+        //查询曾经选择过的答案
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        QueryWrapper<Answer> qwAnswer = new QueryWrapper<>();
+        qwAnswer.eq("ans_usr_id",user.getUsrId());
+        qwAnswer.eq("ans_pa_id",paId);
+        qwAnswer.eq("ans_pos",pos);
+        Answer answer = answerMapper.selectOne(qwAnswer);
         //先查单选题,如果有就返回,没有就查判断题
         QueryWrapper<Single> qwSingle = new QueryWrapper<>();
         qwSingle.eq("sin_pa_id",paId);
         qwSingle.eq("sin_pos",pos);
         Single single = singleMapper.selectOne(qwSingle);
         if(single != null){
+            //将标准答案修改为该生选择过的答案
+            single.setSinStandard(answer!=null ? answer.getAnsSelect() : null);
             return new JsonResult<>(200,"OK",single);
         }
         QueryWrapper<Yesno> qwYesno = new QueryWrapper<>();
@@ -141,6 +151,8 @@ public class PaperServiceImpl implements PaperService {
         qwYesno.eq("yn_pos",pos);
         Yesno yesno = yesNoMapper.selectOne(qwYesno);
         if(yesno != null){
+            //将标准答案修改为该生选择过的答案
+            yesno.setYnStandard(answer!=null ? answer.getAnsSelect() : null);
             return new JsonResult<>(200,"OK",yesno);
         }
         return new JsonResult<>(404,"not found");

@@ -28,6 +28,7 @@
             </form>
             <div id="question">
                 <p id="paper"></p>
+                <dl id="dl"></dl>
             </div>
         </article>
         <!--  版权栏      -->
@@ -89,9 +90,72 @@
                 data:{paId:id , pos: pos},
                 success: function(jsonResult) {
                     console.log(jsonResult)
+                    if(jsonResult.status==200){
+                        var single = jsonResult.data
+                        var sinPos = single.sinPos
+                        var sinCaption = single.sinCaption
+                        var sinPower = single.sinPower
+                        var sinA = single.sinA
+                        var sinB = single.sinB
+                        var sinC = single.sinC
+                        var sinD = single.sinD
+                        var sinStandard = single.sinStandard
+                        var dt = $('<dt></dt>')
+
+                        dt.text(sinPos+'、'+sinCaption+'<'+sinPower+'分>')
+
+                        var dda = $('<dd></dd>')
+                        var ddb = $('<dd></dd>')
+                        var ddc = $('<dd></dd>')
+                        var ddd = $('<dd></dd>')
+
+                        var inputa = $('<input type="radio" name="sel" value="a" onclick="clk(this)">')
+                        var inputb = $('<input type="radio" name="sel" value="b" onclick="clk(this)">')
+                        var inputc = $('<input type="radio" name="sel" value="c" onclick="clk(this)">')
+                        var inputd = $('<input type="radio" name="sel" value="d" onclick="clk(this)">')
+
+                        if(sinStandard == 'a'){inputa.attr('checked',true)}
+                        if(sinStandard == 'b'){inputb.attr('checked',true)}
+                        if(sinStandard == 'c'){inputc.attr('checked',true)}
+                        if(sinStandard == 'd'){inputd.attr('checked',true)}
+
+                        dda.append(inputa)
+                        ddb.append(inputb)
+                        ddc.append(inputc)
+                        ddd.append(inputd)
+
+                        dda.append('&nbsp;&nbsp;a.'+sinA)
+                        ddb.append('&nbsp;&nbsp;b.'+sinB)
+                        ddc.append('&nbsp;&nbsp;c.'+sinC)
+                        ddd.append('&nbsp;&nbsp;d.'+sinD)
+
+                        $('#dl').append(dt)
+                        $('#dl').append(dda)
+                        $('#dl').append(ddb)
+                        $('#dl').append(ddc)
+                        $('#dl').append(ddd)
+                    }
+
                 },
                 error: function(xhr, status, error) {
                     $('#tip').text('失败!')
+                }
+            })
+        }
+        function clk(that){
+            console.log(that.value)
+            $.ajax({
+                url: [[${#httpServletRequest.contextPath}]] +'/clk',
+                type: 'POST',
+                data: {ansPaId:id , ansPos:pos , ansSelect:that.value},
+                success: function(jsonResult) {
+                    if(jsonResult.status == 200){
+
+                    } else {
+
+                    }
+                },
+                error: function(xhr, status, error) {
                 }
             })
         }
