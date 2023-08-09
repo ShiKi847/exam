@@ -124,7 +124,16 @@ public class PaperServiceImpl implements PaperService {
         if (!paPassword.equals(paper.getPaPassword())){
             return  new JsonResult<>(500,"试卷密码错误");
         }
-        return new JsonResult<>(200,"OK",paper);
+        //查询一共有多少条
+        QueryWrapper<Single> qwSingle = new QueryWrapper<>();
+        qwSingle.eq("sin_pa_id",paId);
+        Integer sinCount = singleMapper.selectCount(qwSingle);
+        QueryWrapper<Yesno> qwYesno = new QueryWrapper<>();
+        qwYesno.eq("yn_pa_id",paId);
+        Integer ynCount = yesNoMapper.selectCount(qwYesno);
+        //将携带的题目返回前端
+        paper.setPaId(sinCount+ynCount);
+        return new JsonResult<>(200,"单选题:"+sinCount+",判断题:"+ynCount,paper);
     }
 
     @Override
@@ -153,8 +162,8 @@ public class PaperServiceImpl implements PaperService {
         if(yesno != null){
             //将标准答案修改为该生选择过的答案
             yesno.setYnStandard(answer!=null ? answer.getAnsSelect() : null);
-            return new JsonResult<>(200,"OK",yesno);
+            return new JsonResult<>(201,"OK",yesno);
         }
-        return new JsonResult<>(404,"not found");
+        return new JsonResult<>(404,"已经到最后一题了");
     }
 }
