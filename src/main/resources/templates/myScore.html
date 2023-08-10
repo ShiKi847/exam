@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>考试信息管理系统</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+        <!--  抬头拦  -->
+        <div th:replace="common::#header"></div>
+        <!--  导航栏  -->
+        <div th:replace="common::#nav"></div>
+        <!--  正文    -->
+        <article class="container" >
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>卷ID</th>
+                    <th>卷名</th>
+                    <th>成绩</th>
+                    <th>创建时间</th>
+                    <th>更新时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="score:${scoreList}">
+                    <td th:text="${score.scPaId}"></td>
+                    <td th:text="${score.scId}"></td>
+                    <td th:text="${score.scMark}"></td>
+                    <td th:text="${score.scCreatedate}"></td>
+                    <td th:text="${score.scUpdatedate}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+        <!--  版权栏      -->
+        <div th:replace="common::#footer"></div>
+
+        <script th:src="@{/js/jquery-3.3.1.js}"></script>
+        <script th:src="@{/js/bootstrap.js}"></script>
+
+</body>
+</html>

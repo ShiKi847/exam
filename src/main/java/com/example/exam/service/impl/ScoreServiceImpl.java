@@ -1,10 +1,7 @@
 package com.example.exam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.exam.dao.AnswerMapper;
-import com.example.exam.dao.ScoreMapper;
-import com.example.exam.dao.SingleMapper;
-import com.example.exam.dao.YesNoMapper;
+import com.example.exam.dao.*;
 import com.example.exam.entity.*;
 import com.example.exam.pojo.JsonResult;
 import com.example.exam.service.ScoreService;
@@ -29,6 +26,9 @@ public class ScoreServiceImpl implements ScoreService{
     private SingleMapper singleMapper;
     @Autowired
     private YesNoMapper yesNoMapper;
+
+    @Autowired
+    private PaperMapper paperMapper;
 
     @Override
     public JsonResult<?> submit(Integer paId) {
@@ -82,5 +82,21 @@ public class ScoreServiceImpl implements ScoreService{
             scoreMapper.insert(score);
         }
         return new JsonResult<>(200,"OK");
+    }
+
+    @Override
+    public List<Score> selectList() {
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        QueryWrapper<Score> qw = new QueryWrapper<Score>();
+        qw.eq("sc_usr_id",user.getUsrId());
+        List<Score> scoreList = scoreMapper.selectList(qw);
+        //遍历成绩列表，根据试卷ID查询试卷名字
+        for (Score score : scoreList) {
+            Integer scPaId = score.getScPaId();
+            Paper paper = paperMapper.selectById(scPaId);
+            score.setScId(paper.getPaName());
+        }
+        return scoreList;
+
     }
 }
