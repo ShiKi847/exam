@@ -24,4 +24,10 @@ public interface PaperService {
     JsonResult<Paper> queryPaper(Integer paId, String paPassword);
 
     JsonResult<Serializable> queryQuestion(Integer paId, Integer pos);
+
+
+    boolean updatePassword(Paper paper);
+
+
+    boolean updateStatus(Integer paId,Boolean paStatus);
 }

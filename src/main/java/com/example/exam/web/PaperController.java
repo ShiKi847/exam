@@ -80,4 +80,20 @@ public class PaperController {
         return paperService.queryQuestion(paId,pos);
     }
 
+    //修改密码
+    @PostMapping("/updatePassword")
+    @RequiresRoles("ADMIN")
+    @ResponseBody
+    public boolean updatePassword(Paper paper){
+        return paperService.updatePassword(paper);
+    }
+
+    //修改试卷状态
+    @PostMapping("/updateStatus")
+    @RequiresRoles("ADMIN")
+    @ResponseBody
+    public boolean updateStatus(Integer paId,Boolean paStatus){
+        return paperService.updateStatus(paId,paStatus);
+    }
+
 }

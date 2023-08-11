@@ -166,4 +166,19 @@ public class PaperServiceImpl implements PaperService {
         }
         return new JsonResult<>(404,"已经到最后一题了");
     }
+
+    @Override
+    public boolean updatePassword(Paper paper) {
+        return paperMapper.updateById(paper)==1;
+    }
+
+    @Override
+    public boolean updateStatus(Integer paId,Boolean paStatus) {
+        Paper paper = new Paper();
+        paper.setPaId(paId);
+        paper.setPaStatus(paStatus);
+        paperMapper.updateById(paper);
+        return true;
+    }
+
 }
