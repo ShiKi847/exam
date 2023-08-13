@@ -58,14 +58,14 @@ public class PaperController {
         return flag;
     }
 
-    //在线老师
+    //在线考试
     @GetMapping("/onlineTest")
     @RequiresRoles("USER")
     public String onlineTest(){
         return "onlineTest";
     }
 
-    //在线老师
+    //在线考试
     @PostMapping("/onlineTest")
     @RequiresRoles("USER")
     @ResponseBody
