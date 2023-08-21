@@ -169,9 +169,11 @@
                     success: function(response) {
                         if(text =='关闭') {
                             text='开放'
+                            that.paStatus = true
                         }
                         else {
                             text='关闭'
+                            that.paStatus = false
                         }
                         $(that).text(text)
 

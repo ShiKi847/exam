@@ -124,6 +124,9 @@ public class PaperServiceImpl implements PaperService {
         if (!paPassword.equals(paper.getPaPassword())){
             return  new JsonResult<>(500,"试卷密码错误");
         }
+        if (paper.getPaStatus() == false){
+            return  new JsonResult<>(404,"试卷被老师关闭了");
+        }
         //查询一共有多少条
         QueryWrapper<Single> qwSingle = new QueryWrapper<>();
         qwSingle.eq("sin_pa_id",paId);
@@ -176,7 +179,7 @@ public class PaperServiceImpl implements PaperService {
     public boolean updateStatus(Integer paId,Boolean paStatus) {
         Paper paper = new Paper();
         paper.setPaId(paId);
-        paper.setPaStatus(paStatus);
+        paper.setPaStatus(!paStatus);
         paperMapper.updateById(paper);
         return true;
     }

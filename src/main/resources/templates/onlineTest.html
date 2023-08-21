@@ -55,6 +55,7 @@
             $('#tip').text("")
             var paId = $('#paId').val()
             var paPassword = $('#paPassword').val()
+
             if(!/^\d{1,16}$/.test(paId)){
                 $('#tip').text("卷ID格式不对")
                 return false
@@ -63,6 +64,7 @@
                 $('#tip').text("密码格式不对")
                 return false
             }
+
             //把文件上传到服务器
             var formData = new FormData();
             formData.append('paId', paId);
@@ -74,10 +76,10 @@
                 processData: false,
                 contentType: false,
                 success: function(jsonResult) {
+                    var paper = jsonResult.data
                     if(jsonResult.status == 200){
                         $('#form').hide();
                         $('#question').removeClass('hidden')
-                        var paper = jsonResult.data
                         $('#paper').text('试卷名:'+paper.paName+","+jsonResult.message)
                         id=paId
                         pos=1
