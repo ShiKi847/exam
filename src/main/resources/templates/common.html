@@ -24,6 +24,7 @@
                     </strong>
                     <span shiro:hasRole="ADMIN">老师</span>
                     <span shiro:hasRole="USER">学生</span>
+                    <span shiro:hasRole="SYSTEM">主任</span>
                     访问 <br>
                     <a th:href="@{/logout}">退出</a>
                 </shiro:authenticated>
@@ -63,6 +64,13 @@
                         </li>
                         <li th:class=" ${#httpServletRequest.requestURI.endsWith('/myScore')} ? 'active' : '' ">
                             <a th:href="@{/myScore}">我的成绩</a>
+                        </li>
+                    </shiro:authenticated>
+                </ul>
+                <ul class="nav navbar-nav" shiro:hasRole="SYSTEM">
+                    <shiro:authenticated>
+                        <li th:class=" ${#httpServletRequest.requestURI.endsWith('/manageUser')} ? 'active' : '' ">
+                            <a th:href="@{/manageUser}">管理账户</a>
                         </li>
                     </shiro:authenticated>
                 </ul>
