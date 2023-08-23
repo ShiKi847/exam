@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional
@@ -32,5 +33,17 @@ public class UserServiceImpl implements UserService {
         user.setUsrSalt(salt);
         user.setUsrCreatedate(new Date());
         return userMapper.insert(user) == 1;
+    }
+
+    @Override
+    public List<User> managerUser() {
+        QueryWrapper<User> qw = new QueryWrapper<>();
+        qw.in("usr_role","ADMIN","USER");
+        return userMapper.selectList(qw);
+    }
+
+    @Override
+    public boolean updateUsrPassword(User user) {
+        return false;
     }
 }

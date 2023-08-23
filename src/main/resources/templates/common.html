@@ -69,8 +69,8 @@
                 </ul>
                 <ul class="nav navbar-nav" shiro:hasRole="SYSTEM">
                     <shiro:authenticated>
-                        <li th:class=" ${#httpServletRequest.requestURI.endsWith('/manageUser')} ? 'active' : '' ">
-                            <a th:href="@{/manageUser}">管理账户</a>
+                        <li th:class=" ${#httpServletRequest.requestURI.endsWith('/managerUser')} ? 'active' : '' ">
+                            <a th:href="@{/managerUser}">管理账户</a>
                         </li>
                     </shiro:authenticated>
                 </ul>

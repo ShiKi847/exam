@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>考试信息管理系统</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+        <!--  抬头拦  -->
+        <div th:replace="common::#header"></div>
+        <!--  导航栏  -->
+        <div th:replace="common::#nav"></div>
+        <!--  正文 -->
+        <article class="container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>姓名</th>
+                        <th>账户</th>
+                        <th>密码</th>
+                        <th>角色</th>
+                        <th>状态</th>
+                        <th>创建日期</th>
+                        <th>修改日期</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user:${userList}">
+                        <td th:text="${user.usrName}"></td>
+                        <td th:text="${user.usrAccount}"></td>
+<!--                        <td ondblclick="dclk1(this)">-->
+<!--                            <input th:value="${user.usrPassword}" style="border: none "-->
+<!--                                   disabled-->
+<!--                                   th:onchange="|change(this,${user.usrId})|"-->
+<!--                            >-->
+<!--                        </td>-->
+                        <td th:text="${user.usrRole}"></td>
+<!--                        <td th:text="${user.usrDelete}==null ? '正常' : '删除'"-->
+<!--                            th:ondblclick="|dclk2(this,${user.usrDelet},${user.usrId})|"-->
+<!--                        ></td>-->
+                        <td th:text="${user.usrCreatedate}"></td>
+                        <td th:text="${user.usrUpdatedate}"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </article>
+        <!--  版权栏      -->
+        <div th:replace="common::#footer"></div>
+
+        <script th:src="@{/js/jquery-3.3.1.js}"></script>
+        <script th:src="@{/js/bootstrap.js}"></script>
+        <script th:inline="javascript">
+
+
+            //确认
+            function check(paId){
+                alert(paId)
+                var ctxPath = [[${#httpServletRequest.contextPath}]]
+                alert(ctxPath)
+                $("#tip").text('')
+                var up=$('#up').val();
+                if(up.length===0){
+                    $("#tip").text('文件不能为空')
+                    return
+                }
+                if(!(up.endsWith('xls') || up.endsWith('xlsx'))){
+                    $("#tip").text("文件必须是excel后缀")
+                    return;
+                }
+                $('#myModal').modal('hide')
+                //把文件上传到服务器
+                var file = $('#up')[0].files[0]; // 找到上传的文件
+                var formData = new FormData();
+                formData.append('file', file); // file相当于以前表单的name
+                formData.append('paId', paId);// paId相当于以前表单的name
+                $.ajax({
+                    url: [[${#httpServletRequest.contextPath}]] +'/upload',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if(response){
+                            $('#tip1').text('导入成功!')
+                            //找到paId值的td标签
+                            $('article table tbody tr td:first-child').each(function (){
+                                if($(this).text() == paId){
+                                    $(this).next().next().next().text('有题')
+                                }
+                            })
+                        }
+                        else $('#tip1').text('导入失败!')
+
+                    },
+                    error: function(xhr, status, error) {
+                        $('#tip1').text('导入失败!')
+                    }
+                });
+            }
+            //密码绑定双击事件
+            function dclk1(that){
+                $(that).children('input').removeAttr('disabled')
+                paPasswordOld = $(that).children('input').value
+                $('#tip1').text('')
+            }
+            //检查密码格式是否正确
+            function change(that,paId){
+                $(that).attr('disabled',true)
+                if(!/^\w{2,16}$/.test(that.value)){
+                    $('#tip1').text("密码格式不对")
+                    that.value = paPasswordOld
+                    return
+                }
+                $.ajax({
+                    url: [[${#httpServletRequest.contextPath}]] +'/updateUsrPassword',
+                    type: 'POST',
+                    data: {
+                        paId:paId,
+                        paPassword: that.value
+                    },
+                    success: function(response) {
+                        if(response){
+                            $('#tip1').text('修改密码成功')
+                        }
+                        else $('#tip1').text('修改密码失败')
+
+                    },
+                    error: function(xhr, status, error) {
+                        $('#tip1').text('修改密码成功')
+                    }
+                });
+            }
+            //试卷状态绑定双击事件
+            function dclk2(that,paStatus,paId){
+                var text = that.innerText
+                $.ajax({
+                    url: [[${#httpServletRequest.contextPath}]] +'/updateStatus',
+                    type: 'POST',
+                    data: {
+                        paId:paId,
+                        paStatus: paStatus
+                    },
+                    success: function(response) {
+                        if(text =='关闭') {
+                            text='开放'
+                            that.paStatus = true
+                        }
+                        else {
+                            text='关闭'
+                            that.paStatus = false
+                        }
+                        $(that).text(text)
+
+                    },
+                    error: function(xhr, status, error) {
+                        $('#tip1').text('修改状态成功')
+                    }
+                });
+            }
+        </script>
+</body>
+</html>
