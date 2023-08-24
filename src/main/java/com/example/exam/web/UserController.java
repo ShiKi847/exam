@@ -5,6 +5,8 @@ import com.example.exam.entity.User;
 import com.example.exam.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
@@ -31,10 +33,17 @@ public class UserController {
         try {
             subject.login(new UsernamePasswordToken(usrAccount,usrPassword));
             return "redirect:/index";
-        } catch (AuthenticationException e) {
-            model.addAttribute("tip","账号或密码错误");
+        } catch (UnknownAccountException e) {
+            model.addAttribute("tip","账号错误");
+            return "login";
+        } catch (IncorrectCredentialsException e) {
+            model.addAttribute("tip","密码错误");
+            return "login";
+        }catch (RuntimeException e) {
+            model.addAttribute("tip",e.getMessage());
             return "login";
         }
+
 
     }
 
@@ -76,6 +85,13 @@ public class UserController {
     @ResponseBody
     public boolean updateUsrPassword(User user){
         return userService.updateUsrPassword(user);
+    }
+
+    @PostMapping("/updateUserStatus")
+    @RequiresRoles("SYSTEM")
+    @ResponseBody
+    public boolean updateUserStatus(Integer usrId,Boolean usrDelete){
+        return userService.updateStatus(usrId,usrDelete);
     }
 
 

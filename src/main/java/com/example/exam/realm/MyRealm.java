@@ -30,6 +30,10 @@ public class MyRealm extends AuthorizingRealm {
         //参数1:认证成功存会话的信息
         //参数2:从数据库中获取的密码
         //参数3:this的名字
+        Boolean usrDelete = user.getUsrDelete();
+        if (usrDelete != null){
+            throw new AuthenticationException("该用户被管理员锁定");
+        }
         return new SimpleAccount(user,user.getUsrPassword(), ByteSource.Util.bytes(user.getUsrSalt()),super.getName());//内部认证
     }
 

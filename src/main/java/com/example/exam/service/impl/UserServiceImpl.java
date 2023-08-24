@@ -46,4 +46,18 @@ public class UserServiceImpl implements UserService {
     public boolean updateUsrPassword(User user) {
         return false;
     }
+
+    @Override
+    public boolean updateStatus(Integer usrId, Boolean usrDelete) {
+        User user = userMapper.selectById(usrId);
+        if(user.getUsrDelete()==null){
+            user.setUsrDelete(false);
+            userMapper.updateById(user);
+        }else {
+            user.setUsrDelete(null);
+            userMapper.updateById(user);
+        }
+        return true;
+
+    }
 }

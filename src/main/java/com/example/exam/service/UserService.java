@@ -14,4 +14,6 @@ public interface UserService  {
     List<User> managerUser();
 
     boolean updateUsrPassword(User user);
+
+    boolean updateStatus(Integer usrId, Boolean usrDelete);
 }
